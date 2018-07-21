@@ -18,8 +18,8 @@ const { argv } = yargs
   .option('dry-run', {
     default: false,
   })
-  .option('export-object', {
-    default: false,
+  .option('format', {
+    default: 'named-export',
   })
   .option('banner', {
     default:

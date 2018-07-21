@@ -34,7 +34,7 @@ export default async ({
   overwrite,
   output,
   dryRun,
-  exportObject,
+  format,
   quiet,
   banner,
 }) => {
@@ -46,17 +46,18 @@ export default async ({
   const paths = await glob(patterns, { cwd, ignore: ['index.js', 'index.mjs'] })
   const indexData = buildIndexData(paths)
 
-  const indexLines = exportObject
-    ? indexData
-        .map(({ name }) => {
-          const importName = camelCase(name)
-          return `import ${importName} from './${name}'`
+  const indexLines =
+    format === 'export-object'
+      ? indexData
+          .map(({ name }) => {
+            const importName = camelCase(name)
+            return `import ${importName} from './${name}'`
+          })
+          .concat(['', `export default ${buildExportObject(indexData)}`])
+      : indexData.map(({ name }) => {
+          const exportName = camelCase(name)
+          return `export { default as ${exportName} } from './${name}'`
         })
-        .concat(['', `export default ${buildExportObject(indexData)}`])
-    : indexData.map(({ name }) => {
-        const exportName = camelCase(name)
-        return `export { default as ${exportName} } from './${name}'`
-      })
 
   const indexContent = [banner]
     .filter(Boolean)

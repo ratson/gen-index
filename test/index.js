@@ -22,12 +22,12 @@ export { default as kebabCase } from './kebab-case'
   )
 })
 
-test('--export-object', async t => {
+test('--format=export-object', async t => {
   const indexContent = await genIndex({
     cwd: Path.join(__dirname, 'fixtures/mixed'),
     dryRun: true,
     quiet: true,
-    exportObject: true,
+    format: 'export-object',
   })
 
   t.is(
