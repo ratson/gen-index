@@ -8,11 +8,13 @@ test('index.mjs', async t => {
     cwd: Path.join(__dirname, 'fixtures/mixed'),
     dryRun: true,
     quiet: true,
+    banner: '// banner',
   })
 
   t.is(
     indexContent,
-    `export { default as a } from './a'
+    `// banner
+export { default as a } from './a'
 export { default as camelCase } from './camelCase'
 export { default as esm } from './esm'
 export { default as kebabCase } from './kebab-case'

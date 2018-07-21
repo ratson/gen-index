@@ -36,6 +36,7 @@ export default async ({
   dryRun,
   exportObject,
   quiet,
+  banner,
 }) => {
   if (!overwrite && (await fse.pathExists(Path.join(cwd, 'index.mjs')))) {
     throw new Error('index.mjs is already exists')
@@ -45,21 +46,23 @@ export default async ({
   const paths = await glob(patterns, { cwd, ignore: ['index.js', 'index.mjs'] })
   const indexData = buildIndexData(paths)
 
-  const indexContent = exportObject
+  const indexLines = exportObject
     ? indexData
         .map(({ name }) => {
           const importName = camelCase(name)
           return `import ${importName} from './${name}'`
         })
-        .concat(['', `export default ${buildExportObject(indexData)}`, ''])
-        .join('\n')
-    : indexData
-        .map(({ name }) => {
-          const exportName = camelCase(name)
-          return `export { default as ${exportName} } from './${name}'`
-        })
-        .concat([''])
-        .join('\n')
+        .concat(['', `export default ${buildExportObject(indexData)}`])
+    : indexData.map(({ name }) => {
+        const exportName = camelCase(name)
+        return `export { default as ${exportName} } from './${name}'`
+      })
+
+  const indexContent = [banner]
+    .filter(Boolean)
+    .concat(indexLines)
+    .concat([''])
+    .join('\n')
 
   if (dryRun) {
     if (!quiet) {
