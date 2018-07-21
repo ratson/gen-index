@@ -18,5 +18,8 @@ const { argv } = yargs
   .option('dry-run', {
     default: false,
   })
+  .option('export-object', {
+    default: false,
+  })
 
 exit(genIndex(argv))
