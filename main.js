@@ -2,7 +2,9 @@ import Path from 'path'
 import fs from 'fs'
 import fse from 'fs-extra'
 import glob from 'fast-glob'
-import camelCase from 'lodash/camelCase'
+
+import formatDefault from './format-default'
+import formatExportObject from './format-export-object'
 
 function buildIndexData(paths) {
   return paths.sort().map(p => {
@@ -12,21 +14,6 @@ function buildIndexData(paths) {
 
     return { name, filePath: p }
   })
-}
-
-function buildExportObject(indexData) {
-  return ['{']
-    .concat(
-      indexData.map(({ name }) => {
-        const exportName = camelCase(name)
-        if (name === exportName) {
-          return `  ${name},`
-        }
-        return `  '${name}': ${exportName},`
-      })
-    )
-    .concat(['}'])
-    .join('\n')
 }
 
 export default async ({
@@ -48,16 +35,8 @@ export default async ({
 
   const indexLines =
     format === 'export-object'
-      ? indexData
-          .map(({ name }) => {
-            const importName = camelCase(name)
-            return `import ${importName} from './${name}'`
-          })
-          .concat(['', `export default ${buildExportObject(indexData)}`])
-      : indexData.map(({ name }) => {
-          const exportName = camelCase(name)
-          return `export { default as ${exportName} } from './${name}'`
-        })
+      ? formatExportObject(indexData)
+      : formatDefault(indexData)
 
   const indexContent = [banner]
     .filter(Boolean)
