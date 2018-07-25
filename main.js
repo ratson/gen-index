@@ -16,6 +16,14 @@ function buildIndexData(paths) {
   })
 }
 
+function buildLines(format, indexData) {
+  if (format === 'export-object') {
+    return formatExportObject(indexData)
+  }
+
+  return formatDefault(indexData)
+}
+
 export default async ({
   cwd,
   overwrite,
@@ -33,10 +41,7 @@ export default async ({
   const paths = await glob(patterns, { cwd, ignore: ['index.js', 'index.mjs'] })
   const indexData = buildIndexData(paths)
 
-  const indexLines =
-    format === 'export-object'
-      ? formatExportObject(indexData)
-      : formatDefault(indexData)
+  const indexLines = buildLines(format, indexData)
 
   const indexContent = [banner]
     .filter(Boolean)
