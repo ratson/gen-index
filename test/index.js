@@ -46,3 +46,21 @@ export default {
 `
   )
 })
+
+test('--format=fixtures/format.js', async t => {
+  const indexContent = await genIndex({
+    cwd: Path.join(__dirname, 'fixtures/mixed'),
+    dryRun: true,
+    quiet: true,
+    format: Path.join(__dirname, 'fixtures/format.js'),
+  })
+
+  t.is(
+    indexContent,
+    `a,a.mjs
+camelCase,camelCase.mjs
+esm,esm/index.mjs
+kebab-case,kebab-case.mjs
+`
+  )
+})
