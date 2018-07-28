@@ -10,6 +10,7 @@ const genIndex = require('.').default
 async function main() {
   const { argv } = yargs
     .option('dir', {
+      type: 'array',
       default: [process.cwd()],
     })
     .option('overwrite', {
