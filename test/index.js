@@ -14,6 +14,7 @@ test('index.mjs', async t => {
   t.is(
     indexContent,
     `// banner
+export { default as TitleCase } from './TitleCase'
 export { default as a } from './a'
 export { default as camelCase } from './camelCase'
 export { default as esm } from './esm'
@@ -32,12 +33,14 @@ test('--format=export-object', async t => {
 
   t.is(
     indexContent,
-    `import a from './a'
+    `import TitleCase from './TitleCase'
+import a from './a'
 import camelCase from './camelCase'
 import esm from './esm'
 import kebabCase from './kebab-case'
 
 export default {
+  TitleCase,
   a,
   camelCase,
   esm,
@@ -57,7 +60,8 @@ test('--format=fixtures/format.js', async t => {
 
   t.is(
     indexContent,
-    `a,a.mjs
+    `TitleCase,TitleCase.mjs
+a,a.mjs
 camelCase,camelCase.mjs
 esm,esm/index.mjs
 kebab-case,kebab-case.mjs

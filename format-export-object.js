@@ -1,10 +1,11 @@
 import camelCase from 'lodash/camelCase'
+import { toIdentifierName } from './format-default'
 
 function buildExportObject(indexData) {
   return ['{']
     .concat(
       indexData.map(({ name }) => {
-        const exportName = camelCase(name)
+        const exportName = toIdentifierName(name)
         if (name === exportName) {
           return `  ${name},`
         }
@@ -18,7 +19,7 @@ function buildExportObject(indexData) {
 export default indexData =>
   indexData
     .map(({ name }) => {
-      const importName = camelCase(name)
+      const importName = toIdentifierName(name)
       return `import ${importName} from './${name}'`
     })
     .concat(['', `export default ${buildExportObject(indexData)}`])
