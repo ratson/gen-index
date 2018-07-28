@@ -21,7 +21,7 @@ async function buildLines(format, indexData) {
     return formatExportObject(indexData)
   }
 
-  if (format) {
+  if (format && format !== 'named-export') {
     const { default: f } = await import(format)
     return f(indexData)
   }
