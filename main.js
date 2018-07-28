@@ -16,14 +16,14 @@ function buildIndexData(paths) {
   })
 }
 
-async function buildLines(format, indexData) {
+async function buildLines(format, indexData, opts) {
   if (format === 'export-object') {
     return formatExportObject(indexData)
   }
 
   if (format && format !== 'named-export') {
     const { default: f } = await import(format)
-    return f(indexData)
+    return f(indexData, opts)
   }
 
   return formatDefault(indexData)
@@ -44,7 +44,7 @@ export default async ({
 
   const patterns = ['*/*.mjs', '*.mjs']
   const paths = await glob(patterns, { cwd, ignore: ['index.js', 'index.mjs'] })
-  const indexData = buildIndexData(paths)
+  const indexData = buildIndexData(paths, { banner, cwd })
 
   const indexLines = await buildLines(format, indexData)
 
