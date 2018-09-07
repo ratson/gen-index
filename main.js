@@ -43,7 +43,10 @@ export default async ({
   }
 
   const patterns = ['*/*.mjs', '*.mjs']
-  const paths = await glob(patterns, { cwd, ignore: ['index.js', 'index.mjs'] })
+  const paths = await glob(patterns, {
+    cwd,
+    ignore: ['index.js', 'index.mjs', '**/*.test.js', '**/__tests__/**'],
+  })
   const indexData = buildIndexData(paths, { banner, cwd })
 
   const indexLines = await buildLines(format, indexData)
