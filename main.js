@@ -42,7 +42,7 @@ export default async ({
     throw new Error('index.mjs is already exists')
   }
 
-  const patterns = ['*/*.mjs', '*.mjs']
+  const patterns = ['*.mjs', '*/index.mjs']
   const paths = await glob(patterns, {
     cwd,
     ignore: ['index.js', 'index.mjs', '**/*.test.js', '**/__tests__/**'],
